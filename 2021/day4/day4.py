@@ -145,6 +145,10 @@ def display_board(board: list, end="\n") -> None:
     print(end=end)
 
 
+
+
+
+
 def check_cross_bingo(board: list, called_numbers) -> bool:
     """
     Checks if the all values are in the diagonal of a 5x5 grid
