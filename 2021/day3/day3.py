@@ -17,6 +17,8 @@ example_input = """00100
 01010"""
 example_input = example_input.split('\n')
 
+
+
 # numbers = [list(l) for l in example_input.split('\n')]
 def calculate_power_consumption(numbers):
     epsilon = ""
