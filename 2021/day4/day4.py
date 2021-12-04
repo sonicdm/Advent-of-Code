@@ -11,6 +11,15 @@ The score of the winning board can now be calculated. Start by finding the sum o
 Then, multiply that sum by the number that was just called when the board won to get the final score.
 
 What is the score of the winning board?
+
+Advent of code 2021: Day 4 - Part 2
+On the other hand, it might be wise to try a different strategy: let the giant squid win.
+
+You aren't sure how many bingo boards a giant squid could play at once, so rather than waste 
+time counting its arms, the safe thing to do is to figure out which board will win last and 
+choose that one. That way, no matter which boards it picks, it will win for sure.
+
+Figure out which board will win last. Once it wins, what would its final score be?
 """
 
 import itertools
@@ -21,6 +30,11 @@ def main():
     test_example_bingo()
     # test part 2
     test_example_bingo(last_win=True)
+    # playing to win
+    print("Playing to win")
+    play_bingo(call_order, boards, last_win=False)
+    # playing to lose
+    print("Playing to lose")
     play_bingo(call_order, boards, last_win=True)
 
 
@@ -50,16 +64,19 @@ def play_bingo(call_order: list, boards: list, diagonal=False, last_win = False)
                 winners.append(winner)
                 bingo_boards.append(board)
                 bingo_board_numbers.append(board_number)
-                print(f"BINGO! Board {board_number}")
-                display_board(board)
+                # print(f"BINGO! Board {board_number}")
+                # display_board(board)
     if last_win:
         winner_board = winners[-1]
         winner_number = bingo_board_numbers[-1]
+        name = "Loser"
     else:
         winner_board = winners[0]
         winner_number = bingo_board_numbers[0]
+        name = "Winner"
     board_score = score_board(*winner_board)
-    print(f"Winner: Board Number {winner_number} with score {board_score}")
+    print(f"{name}: Board Number {winner_number} with score {board_score}")
+    display_board(winner_board[0])
     return board_score
 
 def score_board(board: list, last_called: int, called_numbers: list) -> int:
