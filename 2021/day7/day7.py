@@ -122,6 +122,47 @@ def align_coords(data: list, increment=False) -> tuple[int,int]:
     #             fuel = calculate_fuel_usage(data, value)
     #             fuel_usage[value] = fuel
     
+    if not increment:
+        fuel = sum([abs(median-x) for x in data])
+        return median, fuel
+
+    with tqdm(total=len(coordinate_range), leave=False, desc=f'Finding minimum fuel: Destination: {min_value}') as pbar:
+        # thanks /u/lianadelcongo for how to sum the cost with increment
+        for i in range(min_value, max_value+increment):
+            fuel_usage[i] = sum([cost(i, x) for x in data])
+            if fuel_min is None or fuel_usage[i] < fuel_min:
+                fuel_min = fuel_usage[i]
+                fuel_min_index = i
+            pbar.set_description(f'Minimum fuel: {fuel_min}, Destination: {fuel_min_index}')
+            pbar.update()
+    # with tqdm(total=len(coordinate_range), desc="Destination: ") as pbar:
+    # # with tqdm(total=len(coordinate_range), desc="Destination: ", position=0) as pbar:
+    #     def check_value_fuel(value):
+    #         """
+    #         Checks the fuel usage for a given value
+    #         :param value:
+    #         :return:
+    #         """
+    #         pbar.set_description(f'Destination: {value} Fuel: 0')
+    #         fuel = calculate_fuel_usage(data, value)
+    #         pbar.update(1)
+    #         pbar.set_description(f'Destination: {value} Fuel: {fuel}')
+    #         return value,fuel
+    #     if THREADED:
+    #         with ThreadPoolExecutor(max_workers=1) as executor:
+    #             futures = [executor.submit(check_value_fuel, value) for value  in coordinate_range]
+
+    #         for future in as_completed(futures):
+    #             value, fuel = future.result()
+    #             # print(f'Value: {value} Fuel: {fuel}')
+    #             fuel_usage[value] = fuel
+    #             pbar.update(1)
+    #             pbar.set_description(f'Destination: {value} Fuel: {fuel}')
+    #     else:
+    #         for value in coordinate_range:
+    #             pbar.set_description(f'Destination: {value}')
+    #             fuel = calculate_fuel_usage(data, value)
+    #             fuel_usage[value] = fuel
     
     # for k,v in fuel_usage.items():
     #     if fuel_min is None or fuel_min > v:
@@ -174,7 +215,6 @@ def calculate_fuel_usage(data:list[int], destination: int, inc: int=1) -> int:
     # print(f'Destination {destination} Total fuel: {fuel}')
     
     return fuel
-
 
 
 def origin_to_destination_usage(origin: int, destination: int, cost, inc, parent_pbar) -> tuple[int,int,int]:
